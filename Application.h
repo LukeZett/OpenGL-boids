@@ -2,6 +2,7 @@
 #include <GL/glew.h>
 #include "Simulation.h"
 #include <glm/ext.hpp>
+#include "ShaderCompiler.h"
 
 struct Camera {
 	glm::vec3 position;
@@ -21,8 +22,6 @@ struct Camera {
 	{
 		return glm::lookAt(position, position + looking_dir, up_dir);
 	}
-
-
 };
 
 class Application
@@ -31,7 +30,10 @@ private:
 	int n;
 	std::vector<boid> boids;
 	behaviour flock_behavior;
+	Camera camera;
+	GLuint shader_program = 0;
 public:
+	Application();
 	void Init();
 	void NextStep(float deltaTime);
 	void Draw();

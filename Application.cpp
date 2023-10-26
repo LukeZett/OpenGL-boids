@@ -1,9 +1,21 @@
 #include "Application.h"
 
+Application::Application()
+{
+    camera = {
+        {0.f, 0.f, 1.f},
+        {0,0,-1},
+        70.f,
+        16.f / 9
+    };
+}
+
 void Application::Init()
 {
+    auto wd = std::filesystem::current_path();
     n = 400;
 
+    shader_program = CreateShaderProgram(GL_VERTEX_SHADER, wd / "Shaders" / "main.vert", GL_FRAGMENT_SHADER, wd / "Shaders" / "main.frag");
     boids = init_boids(n);
     flock_behavior = { normal, 0.1f, 0.05f };
 
@@ -20,6 +32,7 @@ void Application::Init()
     glVertexAttribDivisor(0, 6);
     glVertexAttribDivisor(2, 6);
     glVertexAttribDivisor(1, 6);
+
 }
 
 void Application::NextStep(float deltaTime)
@@ -30,6 +43,7 @@ void Application::NextStep(float deltaTime)
 
 void Application::Draw()
 {
+    glUseProgram(shader_program);
     glDrawArraysInstanced(GL_TRIANGLES, 0, 6, n * 6);
 }
 
