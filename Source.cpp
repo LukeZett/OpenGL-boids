@@ -8,9 +8,8 @@
 #include "Window.h"
 #include "Application.h"
 
-std::filesystem::path wd;
 Window mainWindow = { Windowed, "Boids" };
-Application application;
+Application application = (&mainWindow);
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
@@ -26,15 +25,20 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
             break;
         }
     }
-    else {
+    else if (action == GLFW_RELEASE) {
         application.KeyRelease(key, scancode, mods);
     }
+}
+
+static void cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
+{
+    application.MouseMove(xpos, ypos);
 }
 
 
 int main(void)
 {
-    wd = std::filesystem::current_path();
+
 
     /* Initialize the library */
 
@@ -55,12 +59,10 @@ int main(void)
     if (err != GLEW_OK)
         return -1;
 
-    shader_program = CreateShaderProgram(GL_VERTEX_SHADER, wd / "Shaders" / "main.vert", GL_FRAGMENT_SHADER, wd / "Shaders" / "main.frag");
-    compute_shader_program = CreateShaderProgram(GL_COMPUTE_SHADER, wd / "Shaders" / "helloGPU.comp");
-
     
     glEnable(GL_MULTISAMPLE);
     glfwSetKeyCallback(mainWindow.window, key_callback);
+    glfwSetCursorPosCallback(mainWindow.window, cursor_position_callback);
     application.Init();
 
     /* Loop until the user closes the window */
@@ -72,7 +74,7 @@ int main(void)
         /* Render here */
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        glUseProgram(shader_program);
+        
         application.Draw();
 
         /* Swap front and back buffers */
