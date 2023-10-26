@@ -9,7 +9,7 @@
 #include "Application.h"
 
 Window mainWindow = { Windowed, "Boids" };
-Application application = (mainWindow);
+Application application = (&mainWindow);
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {

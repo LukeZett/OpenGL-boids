@@ -1,6 +1,6 @@
 #include "Application.h"
 
-Application::Application(Window window) : mainWindow(window)
+Application::Application(Window *window) : mainWindow(window)
 {
     camera = {
         {0.f, 0.f, 5.f},
@@ -66,7 +66,7 @@ void Application::KeyPress(int key, int scancode, int mods)
     case GLFW_KEY_S: cameraMovement.backward = true; break;
     case GLFW_KEY_A: cameraMovement.left = true; break;
     case GLFW_KEY_D: cameraMovement.right = true; break;
-    case GLFW_KEY_ENTER: glfwSetInputMode(mainWindow.window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+    case GLFW_KEY_ENTER: glfwSetInputMode(mainWindow->window, GLFW_CURSOR, GLFW_CURSOR_NORMAL); break;
     default:
         break;
     }
@@ -80,7 +80,7 @@ void Application::KeyRelease(int key, int scancode, int mods)
     case GLFW_KEY_S: cameraMovement.backward = false; break;
     case GLFW_KEY_A: cameraMovement.left = false; break;
     case GLFW_KEY_D: cameraMovement.right = false; break;
-    case GLFW_KEY_ENTER: glfwSetInputMode(mainWindow.window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    case GLFW_KEY_ENTER: glfwSetInputMode(mainWindow->window, GLFW_CURSOR, GLFW_CURSOR_DISABLED); break;
     default:
         break;
     }

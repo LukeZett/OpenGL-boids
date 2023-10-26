@@ -37,7 +37,7 @@ class Application
 {
 private:
 	int n;
-	Window mainWindow;
+	Window *mainWindow;
 	CameraMovement cameraMovement;
 	std::vector<boid> boids;
 	behaviour flock_behavior;
@@ -48,7 +48,7 @@ private:
 	glm::mat4x4 mM;
 
 public:
-	Application(Window window);
+	Application(Window *window);
 	void Init();
 	void NextStep(float deltaTime);
 	void Draw();
