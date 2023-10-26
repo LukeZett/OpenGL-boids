@@ -46,11 +46,11 @@ std::vector<boid> init_boids(int amount)
 	return result;
 }
 
-void next_step(std::vector<boid>& boids, behaviour flock_behavior)
+void next_step(std::vector<boid>& boids, behaviour flock_behavior, float deltaTime)
 {
 	for (size_t i = 0; i < boids.size(); i++)
 	{
-		boids[i].pos = boids[i].pos + (boids[i].dir * 0.004f);
+		boids[i].pos = boids[i].pos + (boids[i].dir * deltaTime);
 		
 		glm::vec2 avg_pos = { 0, 0 };
 		glm::vec2 avg_vlc = { 0, 0 };

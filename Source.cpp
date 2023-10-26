@@ -9,7 +9,6 @@
 #include "Application.h"
 
 std::filesystem::path wd;
-behaviour bh = { normal, 0.1f, 0.05f };
 Window mainWindow = { Windowed, "Boids" };
 Application application;
 
@@ -62,51 +61,29 @@ int main(void)
     
     glEnable(GL_MULTISAMPLE);
     glfwSetKeyCallback(mainWindow.window, key_callback);
-
-    int n = 400;
-    
-    auto boids = init_boids(n);
-
-    GLuint boid_buffer = 0;
-    glGenBuffers(1, &boid_buffer);
-    glBindBuffer(GL_ARRAY_BUFFER, boid_buffer);
-    glBufferData(GL_ARRAY_BUFFER, n * sizeof(boid), &boids[0], GL_DYNAMIC_DRAW);
-    glEnableVertexAttribArray(0);
-    glEnableVertexAttribArray(1);
-    glEnableVertexAttribArray(2);
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(boid), 0);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(boid), (const void*) (offsetof(boid, dir)));
-    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(boid), (const void*)(offsetof(boid, rgb)));
-    glVertexAttribDivisor(0, 6);
-    glVertexAttribDivisor(2, 6);
-    glVertexAttribDivisor(1, 6);
+    application.Init();
 
     /* Loop until the user closes the window */
+    auto timestamp{ std::chrono::steady_clock::now() };
+
     while (!glfwWindowShouldClose(mainWindow.window)
         )
     {
-        auto start{ std::chrono::steady_clock::now() };
-
         /* Render here */
-        
-        next_step(boids, bh);
-        
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         glUseProgram(shader_program);
-        glDrawArraysInstanced(GL_TRIANGLES, 0, 6, n * 6);
-
+        application.Draw();
 
         /* Swap front and back buffers */
         glfwSwapBuffers(mainWindow.window);
-        glBufferSubData(GL_ARRAY_BUFFER, 0, n * sizeof(boid), &boids[0]);
         
         /* Poll for and process events */
         glfwPollEvents();
-        auto end{ std::chrono::steady_clock::now() };
-        const std::chrono::duration<double> elapsed_seconds{ end - start };
-        std::cout << elapsed_seconds.count() << "s\n";
-
+        auto timestamp2{ std::chrono::steady_clock::now() };
+        const std::chrono::duration<float> duration = { timestamp2 - timestamp };
+        timestamp = timestamp2;
+        application.NextStep(duration.count());
     }
 
     glfwTerminate();
