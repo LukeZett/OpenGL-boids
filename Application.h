@@ -13,6 +13,8 @@ struct Camera {
 	glm::vec3 up_dir = {0.0f, 1.0f, 0.0f};
 	float z_near = 0.01f;
 	float z_far = 100.0f;
+	float horizontalAngle = 3.141;
+	float verticalAngle = 0;
 
 	glm::mat4x4 GetPerpective()
 	{
@@ -22,6 +24,13 @@ struct Camera {
 	glm::mat4x4 GetView()
 	{
 		return glm::lookAt(position, position + looking_dir, up_dir);
+	}
+	void UpdateDirection() {
+		looking_dir = {
+			cos(verticalAngle) * sin(horizontalAngle),
+			sin(verticalAngle),
+			cos(verticalAngle) * cos(horizontalAngle)
+		};
 	}
 };
 
@@ -46,6 +55,8 @@ private:
 	glm::mat4x4 pM;
 	glm::mat4x4 vM;
 	glm::mat4x4 mM;
+	glm::vec<2, double> cursorPos;
+	bool disabledCursor;
 
 public:
 	Application(Window *window);
@@ -54,6 +65,7 @@ public:
 	void Draw();
 	void KeyPress(int key, int scancode, int mods);
 	void KeyRelease(int key, int scancode, int mods);
+	void MouseMove(float x, float y);
 	void MoveCamera(float deltatime);
 };
 

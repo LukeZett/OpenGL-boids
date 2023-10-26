@@ -30,6 +30,11 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
     }
 }
 
+static void cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
+{
+    application.MouseMove(xpos, ypos);
+}
+
 
 int main(void)
 {
@@ -57,6 +62,7 @@ int main(void)
     
     glEnable(GL_MULTISAMPLE);
     glfwSetKeyCallback(mainWindow.window, key_callback);
+    glfwSetCursorPosCallback(mainWindow.window, cursor_position_callback);
     application.Init();
 
     /* Loop until the user closes the window */

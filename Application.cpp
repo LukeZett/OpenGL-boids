@@ -8,6 +8,7 @@ Application::Application(Window *window) : mainWindow(window)
         70.f,
         16.f / 9
     };
+    camera.UpdateDirection();
 }
 
 void Application::Init()
@@ -66,7 +67,7 @@ void Application::KeyPress(int key, int scancode, int mods)
     case GLFW_KEY_S: cameraMovement.backward = true; break;
     case GLFW_KEY_A: cameraMovement.left = true; break;
     case GLFW_KEY_D: cameraMovement.right = true; break;
-    case GLFW_KEY_ENTER: glfwSetInputMode(mainWindow->window, GLFW_CURSOR, GLFW_CURSOR_NORMAL); break;
+    case GLFW_KEY_ENTER: glfwSetInputMode(mainWindow->window, GLFW_CURSOR, GLFW_CURSOR_NORMAL); disabledCursor = false; break;
     default:
         break;
     }
@@ -80,9 +81,29 @@ void Application::KeyRelease(int key, int scancode, int mods)
     case GLFW_KEY_S: cameraMovement.backward = false; break;
     case GLFW_KEY_A: cameraMovement.left = false; break;
     case GLFW_KEY_D: cameraMovement.right = false; break;
-    case GLFW_KEY_ENTER: glfwSetInputMode(mainWindow->window, GLFW_CURSOR, GLFW_CURSOR_DISABLED); break;
+    case GLFW_KEY_ENTER: glfwSetInputMode(mainWindow->window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        disabledCursor = true;
+        glfwGetCursorPos(mainWindow->window, &cursorPos.x, &cursorPos.y);
+        break;
     default:
         break;
+    }
+}
+void Application::MouseMove(float x, float y)
+{
+    if (disabledCursor)
+    {
+        float dx = cursorPos.x - x;
+        float dy = cursorPos.y - y;
+        cursorPos.x = x;
+        cursorPos.y = y;
+
+        camera.horizontalAngle += dx * 0.001;
+        camera.verticalAngle += dy * 0.001;
+
+        camera.verticalAngle = glm::min(glm::max(camera.verticalAngle, -1.5f), 1.5f);
+
+        camera.UpdateDirection();
     }
 }
 void Application::MoveCamera(float deltatime)
