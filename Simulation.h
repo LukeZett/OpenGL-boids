@@ -24,4 +24,4 @@ struct boid {
 
 std::vector<boid> init_boids(int amount);
 
-void next_step(std::vector<boid> &boids, behaviour flock_behavior);
+void next_step(std::vector<boid> &boids, behaviour flock_behavior, float deltaTime);
