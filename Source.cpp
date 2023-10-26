@@ -9,7 +9,7 @@
 #include "Application.h"
 
 Window mainWindow = { Windowed, "Boids" };
-Application application;
+Application application = (mainWindow);
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
@@ -25,7 +25,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
             break;
         }
     }
-    else {
+    else if (action == GLFW_RELEASE) {
         application.KeyRelease(key, scancode, mods);
     }
 }

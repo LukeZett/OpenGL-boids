@@ -9,6 +9,15 @@ layout(location=1) in vec2 direction;
 layout(location=2) in vec3 rgb;
 
 // ----------------------------------------------------------------------------
+// Uniform Variables
+// ----------------------------------------------------------------------------
+
+layout(location = 0) uniform mat4x4 mM;
+layout(location = 1) uniform mat4x4 vM;
+layout(location = 2) uniform mat4x4 pM;
+
+
+// ----------------------------------------------------------------------------
 // Output Variables
 // ----------------------------------------------------------------------------
 layout(location = 0) out vec4 vs_color;
@@ -42,6 +51,7 @@ const vec2 offset2[6] = {
 void main()
 {
 	vec2 new_dir = normalize(direction);
-    gl_Position = vec4(position + offset[gl_VertexID % 6] * new_dir + new_dir.yx * offset2[gl_VertexID % 6], 0.0, 1.0);
+    vec4 position = vec4(position + offset[gl_VertexID % 6] * new_dir + new_dir.yx * offset2[gl_VertexID % 6], 0.0, 1.0);
+	gl_Position = pM * vM * mM * position;
 	vs_color = vec4(rgb, 1);
 }

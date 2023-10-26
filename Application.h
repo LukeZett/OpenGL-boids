@@ -3,6 +3,7 @@
 #include "Simulation.h"
 #include <glm/ext.hpp>
 #include "ShaderCompiler.h"
+#include "Window.h"
 
 struct Camera {
 	glm::vec3 position;
@@ -24,20 +25,35 @@ struct Camera {
 	}
 };
 
+struct CameraMovement {
+	bool forward = false;
+	bool backward = false;
+	bool right = false;
+	bool left = false;
+};
+
+
 class Application
 {
 private:
 	int n;
+	Window mainWindow;
+	CameraMovement cameraMovement;
 	std::vector<boid> boids;
 	behaviour flock_behavior;
 	Camera camera;
 	GLuint shader_program = 0;
+	glm::mat4x4 pM;
+	glm::mat4x4 vM;
+	glm::mat4x4 mM;
+
 public:
-	Application();
+	Application(Window window);
 	void Init();
 	void NextStep(float deltaTime);
 	void Draw();
 	void KeyPress(int key, int scancode, int mods);
 	void KeyRelease(int key, int scancode, int mods);
+	void MoveCamera(float deltatime);
 };
 
